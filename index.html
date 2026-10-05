@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffd6e0" />
+  <title>Happy 1 Year Anniversary 💌</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="bottle.css" />
+  <!-- Google Fonts preconnect for speed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     BACKGROUND BUBBLES (filled by JS)
+     ══════════════════════════════════════════════════════ -->
+<div class="bg-bubbles" aria-hidden="true"></div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 1 — HERO
+     ══════════════════════════════════════════════════════ -->
+<section id="hero" aria-label="Hero">
+
+  <h1 class="hero-headline sr sr--d1" id="hero-headline" aria-label="1 year together!">1 year together!</h1>
+
+  <!-- Blobs holding hands + balloon -->
+  <div class="blob-stage sr sr--scale sr--d2" role="img" aria-label="Two cute blob characters holding a balloon">
+
+    <!-- Peach blob -->
+    <div class="blob-wrap bob" style="position:relative; cursor:pointer;" title="Tap me!">
+      <!-- speech bubble -->
+      <div class="speech-bubble" id="bubble-peach" aria-live="polite"></div>
+      <!-- SVG injected by JS -->
+      <span id="hero-blob-peach" aria-hidden="true"></span>
+    </div>
+
+    <!-- Balloon in the middle, above the blobs -->
+    <div style="position:relative; display:flex; flex-direction:column; align-items:center; margin: 0 4px; padding-bottom: 0; z-index:1;">
+      <div class="balloon-wrap" aria-hidden="true">
+        <!-- balloon SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 70" width="46" height="64" aria-hidden="true">
+          <!-- balloon body -->
+          <ellipse cx="25" cy="28" rx="20" ry="24" fill="#ffd6e0" stroke="#4a2c5a" stroke-width="2"/>
+          <!-- shine -->
+          <ellipse cx="18" cy="18" rx="5" ry="7" fill="#fff" opacity="0.45"/>
+          <!-- knot -->
+          <path d="M22,51 Q25,55 28,51" fill="none" stroke="#4a2c5a" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <!-- string -->
+        <div class="balloon-string"></div>
+      </div>
+    </div>
+
+    <!-- Lilac blob -->
+    <div class="blob-wrap bob-slow" style="position:relative; cursor:pointer;" title="Tap me!">
+      <div class="speech-bubble" id="bubble-lilac" aria-live="polite"></div>
+      <span id="hero-blob-lilac" aria-hidden="true"></span>
+    </div>
+
+  </div><!-- /.blob-stage -->
+
+  <p class="hero-sub sr sr--d3">Happy anniversary, bbg!<br>I made you a little something. 🌸</p>
+
+  <button class="pill-btn sr sr--d4" id="gravity-btn" aria-label="Turn off gravity — start the experience">
+    Turn off gravity
+  </button>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 2 — TIMELINE
+     ══════════════════════════════════════════════════════ -->
+<section id="timeline" aria-label="Our memories together">
+
+  <div class="timeline-path" aria-hidden="true"></div>
+
+  <h2 class="timeline-title sr">✨ Our year, one sticker at a time ✨</h2>
+
+  <!-- Cards injected by script.js from the MEMORIES array -->
+  <div class="cards-list sr sr--d1" id="cards-list" role="list" aria-label="Memory cards"></div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 3 — FINALE
+     ══════════════════════════════════════════════════════ -->
+<section id="finale" aria-label="Finale">
+
+  <!-- Star crown -->
+  <div class="star-crown sr sr--scale sr--d1" aria-hidden="true">
+    <span>⭐</span><span>✨</span><span>⭐</span>
+  </div>
+
+  <!-- Hugging blobs (SVG injected by JS) -->
+  <div class="hug-stage sr sr--scale sr--d2" id="finale-hug"
+       role="img" aria-label="Two blobs hugging"></div>
+
+  <h2 class="finale-title sr sr--d3">Here's to year two! 🎉</h2>
+  <p class="finale-hint sr sr--d4">Tap anywhere. Send some love up.</p>
+  <p class="finale-sig sr sr--d5">
+    love, Dhruv&lt;3 💌
+    <svg id="secret-eye" class="secret-eye" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+  </p>
+
+</section>
+
+
+
+
+<!-- ══════════════════════════════════════════════════════
+     SUSPICIOUS BUTTON
+     ══════════════════════════════════════════════════════ -->
+<div class="suspicious-btn-wrap">
+  <button id="suspicious-btn" class="suspicious-btn" aria-label="Suspicious button">whatever you do, don't click this</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SCRIPTS
+     ══════════════════════════════════════════════════════ -->
+<script src="script.js"></script>
+<script src="bottle.js"></script>
+</body>
+</html>

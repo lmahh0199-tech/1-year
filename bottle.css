@@ -1,0 +1,302 @@
+/* ============================================================
+   bottle.css — Love Letter in a Bottle
+   Depends on: style.css (for --plum, --bg-cream, --peach, etc.)
+   ============================================================ */
+
+/* ── Full-screen overlay ── */
+#bottle-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+#bottle-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── Sky scene (canvas layer behind everything) ── */
+#bottle-sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Mute button ── */
+#bottle-mute {
+  position: absolute;
+  top: 1.1rem;
+  left: 1.2rem;
+  z-index: 10;
+  background: rgba(255,248,240,0.15);
+  border: 1.5px solid rgba(255,248,240,0.35);
+  border-radius: 999px;
+  color: var(--bg-cream);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3em 0.85em;
+  cursor: pointer;
+  transition: background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+#bottle-mute:hover { background: rgba(255,248,240,0.28); }
+
+/* ── Close button ── */
+#bottle-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  color: rgba(255,248,240,0.65);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.4rem;
+  transition: color 0.2s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+#bottle-close:hover { color: var(--bg-cream); transform: scale(1.1); }
+
+/* ── Floating bottle SVG ── */
+#bottle-svg-wrap {
+  position: absolute;
+  cursor: pointer;
+  transform-origin: center bottom;
+  /* drifting handled by JS rAF */
+  will-change: transform;
+}
+#bottle-svg-wrap:focus-visible {
+  outline: 3px solid var(--bg-cream);
+  border-radius: 12px;
+}
+#bottle-hint {
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255,248,240,0.75);
+  margin-top: 0.5rem;
+  pointer-events: none;
+  letter-spacing: 0.03em;
+}
+
+/* wobble keyframe triggered by JS */
+@keyframes bottle-wobble {
+  0%   { transform: rotate(var(--bottle-rot, -4deg)) scale(1); }
+  20%  { transform: rotate(calc(var(--bottle-rot, -4deg) + 14deg)) scale(1.06, 0.94); }
+  40%  { transform: rotate(calc(var(--bottle-rot, -4deg) - 10deg)) scale(0.95, 1.07); }
+  60%  { transform: rotate(calc(var(--bottle-rot, -4deg) + 6deg))  scale(1.04, 0.97); }
+  80%  { transform: rotate(calc(var(--bottle-rot, -4deg) - 3deg))  scale(1.01, 1.02); }
+  100% { transform: rotate(var(--bottle-rot, -4deg)) scale(1); }
+}
+#bottle-svg-wrap.wobble {
+  animation: bottle-wobble 0.6s cubic-bezier(.36,.07,.19,.97) both !important;
+}
+
+/* cork pop arc (created by JS) */
+.bottle-cork-pop {
+  position: absolute;
+  pointer-events: none;
+  z-index: 10;
+  animation: cork-arc var(--arc-dur, 0.9s) cubic-bezier(.2,.8,.4,1) forwards;
+}
+@keyframes cork-arc {
+  0%   { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+  60%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--cx, 60px), var(--cy, -80px)) rotate(200deg) scale(0.5); }
+}
+
+/* sparkle burst around cork (created by JS) */
+.bottle-sparkle {
+  position: absolute;
+  pointer-events: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  animation: bspark var(--dur, 0.6s) ease-out forwards;
+}
+@keyframes bspark {
+  0%   { opacity: 1; transform: translate(0,0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx,0px), var(--dy,-20px)) scale(0); }
+}
+
+/* ── Letter card ── */
+#bottle-letter-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.88);
+  transition: opacity 0.7s cubic-bezier(.175,.885,.32,1.275),
+              transform 0.7s cubic-bezier(.175,.885,.32,1.275);
+  z-index: 5;
+  padding: 0.5rem;
+}
+#bottle-letter-wrap.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: all;
+}
+
+#bottle-letter-card {
+  background: var(--bg-cream);
+  border-radius: 18px;
+  border: 2.5px solid var(--plum);
+  box-shadow: 6px 6px 0 var(--peach), 0 12px 40px rgba(74,44,90,0.25);
+  padding: 2rem 1.6rem 1.5rem;
+  max-width: min(90vw, 480px);
+  width: 100%;
+  max-height: 78svh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* torn top-edge effect via SVG mask */
+  --torn-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='12'%3E%3Cpath d='M0,12 Q25,2 50,10 Q75,18 100,8 Q125,0 150,9 Q175,16 200,7 Q225,1 250,10 Q275,17 300,6 Q325,2 350,11 Q375,18 400,8 L400,0 L0,0 Z' fill='%23fff8f0'/%3E%3C/svg%3E");
+}
+
+/* Ribbon seal at card top */
+#bottle-letter-card::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 4px;
+  background: var(--peach);
+  border-radius: 999px;
+  margin: 0 auto 1.2rem;
+  opacity: 0.8;
+}
+
+#bottle-letter-scroll {
+  overflow-y: auto;
+  flex: 1;
+  /* custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--lilac) transparent;
+  padding-right: 0.25rem;
+}
+#bottle-letter-scroll::-webkit-scrollbar { width: 4px; }
+#bottle-letter-scroll::-webkit-scrollbar-track { background: transparent; }
+#bottle-letter-scroll::-webkit-scrollbar-thumb { background: var(--lilac); border-radius: 999px; }
+
+#bottle-letter-text {
+  font-family: 'Caveat', 'Patrick Hand', cursive;
+  font-size: clamp(1.15rem, 5vw, 1.35rem);
+  line-height: 1.8;
+  color: var(--plum);
+  white-space: pre-wrap;
+  min-height: 2em;
+}
+
+/* blinking typing cursor */
+#bottle-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--plum);
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  animation: blink-cursor 0.85s step-end infinite;
+}
+#bottle-cursor.hidden { display: none; }
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* skip link */
+#bottle-skip {
+  display: block;
+  text-align: right;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem;
+  color: var(--plum-light);
+  opacity: 0.6;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0.4rem 0 0;
+  transition: opacity 0.2s;
+  text-decoration: underline;
+  margin-top: 0.5rem;
+}
+#bottle-skip:hover { opacity: 1; }
+#bottle-skip.hidden { display: none; }
+
+/* rising hearts (created by JS, float upward) */
+.bottle-love-heart {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99992;
+  animation: heart-rise var(--dur, 2.5s) ease-out forwards;
+}
+@keyframes heart-rise {
+  0%   { opacity: 0.9; transform: translate(0, 0) scale(0.5) rotate(var(--rot,0deg)); }
+  15%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx,0px), -180px) scale(1.1) rotate(var(--spin,20deg)); }
+}
+
+/* ── Finish buttons ── */
+#bottle-finish-btns {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+#bottle-finish-btns.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+.bottle-action-btn {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--white);
+  background: var(--plum);
+  border: 2.5px solid var(--plum);
+  border-radius: 999px;
+  padding: 0.5em 1.5em;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--peach);
+  transition: transform 0.08s, box-shadow 0.08s;
+  -webkit-tap-highlight-color: transparent;
+}
+.bottle-action-btn:hover  { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--peach); }
+.bottle-action-btn:active { transform: translate(2px,2px);   box-shadow: 1px 1px 0 var(--peach); }
+.bottle-action-btn.secondary {
+  background: transparent;
+  color: var(--plum);
+  box-shadow: 3px 3px 0 var(--lilac);
+}
+.bottle-action-btn.secondary:hover  { box-shadow: 4px 4px 0 var(--lilac); }
+.bottle-action-btn.secondary:active { box-shadow: 1px 1px 0 var(--lilac); }
+
+/* ── prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+  #bottle-overlay,
+  #bottle-letter-wrap,
+  #bottle-wax-seal,
+  #bottle-finish-btns,
+  .bottle-cork-pop,
+  .bottle-sparkle,
+  .bottle-love-heart,
+  .bottle-cork-pop,
+  #bottle-svg-wrap { transition: none !important; animation: none !important; }
+}
