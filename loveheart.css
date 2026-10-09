@@ -1,152 +1,187 @@
 /* ============================================================
-   LOVE HEART — 50 LANGUAGES  (v2 — row-based, no overlap)
+   LOVE HEART — 50 LANGUAGES  (v6 — Typographic Heart Formation)
    loveheart.css
    ============================================================ */
 
 #loveheart-section {
-  background: #000;
-  padding: 5rem 1rem 5.5rem;
+  background: #000000;
+  padding: 4rem 1rem 6rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
   overflow: hidden;
 }
 
-/* ── Intro ── */
+/* ── Intro text ── */
 .lh-intro {
   font-family: 'Baloo 2', cursive;
-  font-size: clamp(1rem, 4vw, 1.55rem);
-  font-weight: 700;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  font-weight: 800;
   color: #FF1A35;
-  letter-spacing: 0.04em;
   text-align: center;
-  margin-bottom: 2.8rem;
+  position: absolute;
+  top: 45%;
   opacity: 0;
-  animation: lh-up 1s 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+  transition: opacity 1s ease;
+  z-index: 10;
+  text-shadow: 0 0 20px rgba(255, 26, 53, 0.4);
 }
+.lh-intro.lh-on { opacity: 1; }
+.lh-intro.lh-off { opacity: 0; pointer-events: none; }
 
-/* ── Rows container ── */
-.lh-rows {
+/* ── Heart Container ── */
+.lh-heart-container {
+  width: 100%;
+  max-width: 880px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  width: min(96vw, 640px);
+  gap: clamp(0.5rem, 1.2vw, 0.9rem);
+  position: relative;
+  z-index: 5;
+  margin-top: 2rem;
 }
 
-/* ── Single row ── */
+/* ── Rows and Lobes ── */
 .lh-row {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
+  width: 100%;
+}
+
+.lh-lobe {
+  display: flex;
   align-items: center;
-  font-family: 'Baloo 2', cursive;
-  font-weight: 600;
-  color: #FF1A35;
   white-space: nowrap;
-  overflow: hidden;
-  line-height: 1.35;
-  opacity: 0;
-  transform: scale(0.92);
-  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22,1,0.36,1);
-  flex-shrink: 0;
 }
-.lh-row.lh-row-visible {
-  opacity: 1;
-  transform: scale(1);
+.lh-lobe-multi {
+  justify-content: space-between;
 }
-
-/* ── Word chips ── */
-.lh-word {
-  cursor: default;
-  user-select: none;
-  -webkit-user-select: none;
-  border-radius: 3px;
-  transition: color 0.2s, text-shadow 0.2s;
-  outline: none;
+.lh-lobe-single {
+  justify-content: center;
 }
-.lh-word:hover,
-.lh-word:focus-visible {
-  color: #FF5566;
-  text-shadow: 0 0 14px #FF1A3566;
+.lh-gap {
+  /* Empty spacer between top lobes */
 }
 
-/* ── Alternating dim / bright ── */
-.lh-row:nth-child(3n) .lh-word   { color: #CC1025; }
-.lh-row:nth-child(5n) .lh-word   { color: #FF2A40; }
-
-/* ── Separator dot ── */
-.lh-sep {
-  color: #660015;
-  flex-shrink: 0;
-  padding: 0 0.2em;
-  pointer-events: none;
-  user-select: none;
-}
-
-/* ── Tooltip ── */
-.lh-tooltip {
-  position: fixed;
-  background: #FF1A35;
-  color: #000;
+/* ── Phrases ── */
+.lh-phrase {
   font-family: 'Nunito', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 800;
-  padding: 3px 9px;
-  border-radius: 4px;
-  pointer-events: none;
-  z-index: 99999;
+  font-weight: 700;
+  font-size: clamp(0.55rem, 1.45vw, 1.15rem);
+  color: #FF1A35;
   opacity: 0;
-  white-space: nowrap;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  transition: opacity 0.16s;
+  transform: translateY(12px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+  cursor: default;
+  /* subtle glow on text */
+  text-shadow: 0 0 6px rgba(255, 26, 53, 0.2);
 }
-.lh-tooltip.lh-tt-on { opacity: 1; }
 
-/* ── Heartbeat ── */
+.lh-phrase.lh-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hover effect on phrases */
+.lh-phrase.lh-visible:hover {
+  text-shadow: 0 0 15px rgba(255, 26, 53, 0.8);
+  transform: scale(1.05);
+  transition: transform 0.2s ease, text-shadow 0.2s ease;
+}
+
+/* ── Heartbeat animation ── */
 @keyframes lh-heartbeat {
-  0%,100% { transform: scale(1);     filter: drop-shadow(0 0 4px #FF1A3520); }
-  14%     { transform: scale(1.025); filter: drop-shadow(0 0 16px #FF1A3550); }
-  28%     { transform: scale(1);     filter: drop-shadow(0 0 4px #FF1A3520); }
-  42%     { transform: scale(1.014); filter: drop-shadow(0 0 10px #FF1A3535); }
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255, 26, 53, 0.1)); }
+  15% { transform: scale(1.02); filter: drop-shadow(0 0 20px rgba(255, 26, 53, 0.3)); }
+  30% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255, 26, 53, 0.1)); }
+  45% { transform: scale(1.01); filter: drop-shadow(0 0 12px rgba(255, 26, 53, 0.2)); }
 }
-.lh-rows.lh-beating {
-  animation: lh-heartbeat 2.8s 0.2s ease-in-out infinite;
+.lh-heart-container.lh-beating {
+  animation: lh-heartbeat 2.6s ease-in-out infinite;
 }
 
-/* ── Outro ── */
+/* ── Outro text ── */
 .lh-outro {
   font-family: 'Nunito', sans-serif;
-  font-size: clamp(0.92rem, 3.2vw, 1.15rem);
+  font-size: clamp(1.1rem, 3.2vw, 1.5rem);
   font-weight: 600;
   color: #CC1020;
   text-align: center;
-  max-width: min(88vw, 520px);
-  margin-top: 3rem;
-  line-height: 1.7;
+  margin-top: 3.5rem;
   opacity: 0;
-  transition: opacity 1.4s ease;
+  transform: translateY(15px);
+  transition: opacity 1.5s ease, transform 1.5s ease;
+  z-index: 5;
+  line-height: 1.6;
 }
-.lh-outro.lh-outro-on { opacity: 1; }
-.lh-outro .lh-hs      { color: #FF1A35; }
+.lh-outro.lh-on {
+  opacity: 1;
+  transform: translateY(0);
+}
+.lh-hs { color: #FF1A35; }
 
-/* ── Keyframes ── */
-@keyframes lh-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ── Replay button ── */
+.lh-replay {
+  background: transparent;
+  border: 1px solid rgba(255, 26, 53, 0.4);
+  border-radius: 30px;
+  color: #FF1A35;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.6rem 1.4rem;
+  margin-top: 2rem;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 1s ease, transform 1s ease, background 0.3s ease, border-color 0.3s ease;
+  z-index: 5;
+  letter-spacing: 0.05em;
+  -webkit-tap-highlight-color: transparent;
 }
+.lh-replay:hover {
+  background: rgba(255, 26, 53, 0.15);
+  border-color: rgba(255, 26, 53, 0.8);
+}
+.lh-replay.lh-on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Tooltip ── */
+.lh-tt {
+  position: fixed;
+  background: #000;
+  color: #FF1A35;
+  border: 1px solid #FF1A35;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 999999;
+  opacity: 0;
+  white-space: nowrap;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+  box-shadow: 0 0 15px rgba(255, 26, 53, 0.25);
+}
+.lh-tt.lh-on { opacity: 1; }
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
-  .lh-intro { animation: none; opacity: 1; }
-  .lh-row   { transition: none; opacity: 1; transform: none; }
-  .lh-rows.lh-beating { animation: none; }
-  .lh-outro { transition: none; }
+  .lh-phrase { transition: none; }
+  .lh-heart-container.lh-beating { animation: none; filter: none; }
+  .lh-outro, .lh-replay, .lh-intro { transition: none; }
 }
 
-/* ── Mobile ── */
-@media (max-width: 460px) {
-  #loveheart-section { padding: 3.5rem 0.25rem 4rem; }
-  .lh-rows { gap: 2px; }
+@media (max-width: 480px) {
+  #loveheart-section { padding: 3rem 0.5rem 4rem; }
 }
